@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0f1020">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gra dla Par – Trip, Auto & Wyzwania</title>
+  <style>
+    :root{--pink:#ff5f8a;--purple:#7b5cff;--bg:#0f1020;--card:#171833;--text:#f5f6ff;--muted:#b9bbff}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto;background:
+      radial-gradient(1200px 600px at 20% -10%, #2a2b5f 0%, transparent 60%),
+      radial-gradient(800px 500px at 110% 10%, #3b1d3a 0%, transparent 55%),
+      linear-gradient(180deg,#0b0c1a,#0f1020);color:var(--text);display:flex;align-items:center;justify-content:center;padding:20px}
+    .wrap{width:100%;max-width:1000px}
+    .header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+    .brand{font-weight:800}
+    .badge{padding:6px 10px;border-radius:999px;background:linear-gradient(135deg,var(--pink),var(--purple));font-size:12px}
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    .card{background:linear-gradient(180deg,#1a1b3f,#141538);border-radius:18px;box-shadow:0 20px 40px rgba(0,0,0,.35);padding:18px}
+    h2{margin:0 0 10px}
+    .menu{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    @media(max-width:600px){.menu{grid-template-columns:1fr 1fr}}
+    button{border:0;border-radius:14px;padding:14px;cursor:pointer;color:#fff;font-weight:600;background:linear-gradient(135deg,var(--pink),var(--purple));box-shadow:0 8px 18px rgba(123,92,255,.35)}
+    button.alt{background:#23245a}
+    button.small{padding:10px 12px;font-size:14px}
+    button.ghost{background:transparent;box-shadow:none;border:1px solid #2c2e72}
+    .panel{display:none}
+    .panel.active{display:block}
+    .challenge{min-height:88px;font-size:18px;line-height:1.4;margin:12px 0}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .muted{color:var(--muted);font-size:14px}
+    .pill{padding:6px 10px;border-radius:999px;background:#23245a}
+    .footer{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .editor textarea{width:100%;min-height:90px;border-radius:12px;border:1px solid #2c2e72;background:#0f1020;color:#fff;padding:10px}
+    .editor select{background:#0f1020;color:#fff;border:1px solid #2c2e72;border-radius:10px;padding:8px}
+    .music{display:flex;gap:8px;align-items:center}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+      <button class="small ghost" onclick="goFullscreen()">⛶ Pełny ekran</button>
+    <div class="brand">❤️ Gra dla Par</div>
+    <div class="row">
+      <div class="music">
+        <button class="small ghost" onclick="toggleMusic()">🎵 Muzyka</button>
+        <input type="range" min="0" max="1" step="0.01" value="0.4" oninput="setVol(this.value)">
+      </div>
+      <div class="badge">randka • auto • 18+</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Tryby gry</h2>
+      <p class="muted">Od lekkiego wstępu po bardziej intymny klimat (18+ soft).</p>
+      <div class="menu">
+        <button onclick="start('easy')">Łatwy</button>
+        <button onclick="start('intro')">Wstęp</button>
+        <button onclick="start('hot')">Hot 🔥</button>
+        <button onclick="start('soft18')">18+ 💋</button>
+        <button onclick="start('close')">Bliskość</button>
+        <button onclick="start('date')">Trip / Randka</button>
+        <button onclick="start('auto')">Auto 🚗</button>
+        <button onclick="showEditor()">Edytor ✍️</button>
+      </div>
+
+      <div class="editor panel" id="editor">
+        <h3>Własne wyzwania</h3>
+        <p class="muted">Dodaj swoje teksty – zapiszą się w przeglądarce.</p>
+        <div class="row">
+          <select id="customMode">
+            <option value="easy">Łatwy</option>
+            <option value="intro">Wstęp</option>
+            <option value="hot">Hot</option>
+            <option value="soft18">18+</option>
+            <option value="close">Bliskość</option>
+            <option value="date">Trip</option>
+            <option value="auto">Auto</option>
+          </select>
+          <button class="small" onclick="saveCustom()">Zapisz</button>
+        </div>
+        <textarea id="customText" placeholder="Wpisz własne wyzwanie..."></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 id="title">Wyzwanie</h2>
+      <div class="row"><span class="pill" id="modeLabel">—</span></div>
+      <div class="challenge" id="challenge">Wybierz tryb po lewej.</div>
+      <div class="footer">
+        <div class="row">
+          <button class="small" onclick="next()">Losuj</button>
+          <button class="small alt" onclick="back()">Menu</button>
+        </div>
+        <span class="muted">losowo</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<audio id="bgm" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7a8f6a8c2e.mp3?filename=romantic-ambient-11157.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+function goFullscreen(){const el=document.documentElement; if(el.requestFullscreen) el.requestFullscreen(); else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();}
+
+const base={
+  easy:["Komplement bez powodu.","Przytulcie się 30 sekund.","Uśmiech i kontakt wzrokowy 10 sekund."],
+  intro:["Delikatny masaż dłoni 1 min.","Pocałunek w policzek/czoło.","Opisz idealny wieczór."],
+  hot:["Szeptem powiedz, co Ci się podoba.","Mocniejsze przytulenie 20 sek.","Zamknijcie oczy i oddychajcie razem."],
+  soft18:["Czuły dotyk przez chwilę.","Powiedz, co Cię rozluźnia.","Powolny pocałunek (bez pośpiechu)."],
+  close:["Jedna rzecz, która daje Ci poczucie bliskości.","Hasło na potrzebę czułości.","Trzy wspólne oddechy."],
+  date:["Zaplanujcie spontaniczną randkę.","Wybierz piosenkę na spacer.","Kawa czy deser?"],
+  auto:["McDonald’s Andrychów 🍔","KFC Andrychów 🍗","Kawa w Andrychowie ☕","Widok na Beskidy 🌄","Przejażdżka z muzyką 🚗🎶","Punkt widokowy okolice Kęt 🌅"]
+};
+let data=JSON.parse(localStorage.getItem('customData')||'null')||JSON.parse(JSON.stringify(base));
+let mode=null;const labels={easy:'Łatwy',intro:'Wstęp',hot:'Hot',soft18:'18+',close:'Bliskość',date:'Trip',auto:'Auto'};
+function start(m){hideEditor();mode=m;document.getElementById('modeLabel').innerText=labels[m];next();}
+function next(){if(!mode)return;const a=data[mode];const i=Math.floor(Math.random()*a.length);document.getElementById('challenge').innerText=a[i];document.getElementById('title').innerText=labels[mode]==='Auto'?'Gdzie jedziemy?':'Wyzwanie';}
+function back(){mode=null;document.getElementById('modeLabel').innerText='—';document.getElementById('challenge').innerText='Wybierz tryb po lewej.';document.getElementById('title').innerText='Wyzwanie';}
+function showEditor(){document.getElementById('editor').classList.add('active');}
+function hideEditor(){document.getElementById('editor').classList.remove('active');}
+function saveCustom(){const m=document.getElementById('customMode').value;const t=document.getElementById('customText').value.trim();if(!t)return;data[m].push(t);localStorage.setItem('customData',JSON.stringify(data));document.getElementById('customText').value='';alert('Zapisano!');}
+const bgm=document.getElementById('bgm');bgm.volume=0.4;
+function toggleMusic(){if(bgm.paused)bgm.play();else bgm.pause();}
+function setVol(v){bgm.volume=v;}
+</script>
+</body>
+</html>
