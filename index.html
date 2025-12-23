@@ -1,106 +1,79 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#0f1020">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gra dla Par – Trip, Auto & Wyzwania</title>
-  <style>
-    :root{--pink:#ff5f8a;--purple:#7b5cff;--bg:#0f1020;--card:#171833;--text:#f5f6ff;--muted:#b9bbff}
-    *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto;background:
-      radial-gradient(1200px 600px at 20% -10%, #2a2b5f 0%, transparent 60%),
-      radial-gradient(800px 500px at 110% 10%, #3b1d3a 0%, transparent 55%),
-      linear-gradient(180deg,#0b0c1a,#0f1020);color:var(--text);display:flex;align-items:center;justify-content:center;padding:20px}
-    .wrap{width:100%;max-width:1000px}
-    .header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-    .brand{font-weight:800}
-    .badge{padding:6px 10px;border-radius:999px;background:linear-gradient(135deg,var(--pink),var(--purple));font-size:12px}
-    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
-    @media(max-width:900px){.grid{grid-template-columns:1fr}}
-    .card{background:linear-gradient(180deg,#1a1b3f,#141538);border-radius:18px;box-shadow:0 20px 40px rgba(0,0,0,.35);padding:18px}
-    h2{margin:0 0 10px}
-    .menu{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-    @media(max-width:600px){.menu{grid-template-columns:1fr 1fr}}
-    button{border:0;border-radius:14px;padding:14px;cursor:pointer;color:#fff;font-weight:600;background:linear-gradient(135deg,var(--pink),var(--purple));box-shadow:0 8px 18px rgba(123,92,255,.35)}
-    button.alt{background:#23245a}
-    button.small{padding:10px 12px;font-size:14px}
-    button.ghost{background:transparent;box-shadow:none;border:1px solid #2c2e72}
-    .panel{display:none}
-    .panel.active{display:block}
-    .challenge{min-height:88px;font-size:18px;line-height:1.4;margin:12px 0}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .muted{color:var(--muted);font-size:14px}
-    .pill{padding:6px 10px;border-radius:999px;background:#23245a}
-    .footer{display:flex;justify-content:space-between;align-items:center;gap:10px}
-    .editor textarea{width:100%;min-height:90px;border-radius:12px;border:1px solid #2c2e72;background:#0f1020;color:#fff;padding:10px}
-    .editor select{background:#0f1020;color:#fff;border:1px solid #2c2e72;border-radius:10px;padding:8px}
-    .music{display:flex;gap:8px;align-items:center}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gra dla Par – Trip, Auto & Wyzwania</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0b0c1a">
+<style>
+  body{margin:0;padding:0;font-family:Inter, sans-serif;background:#0b0c1a;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:100vh;}
+  .header{width:100%;display:flex;justify-content:space-between;align-items:center;padding:10px 15px;background:#141538;box-shadow:0 2px 8px rgba(0,0,0,0.5);}
+  .brand{font-weight:700;font-size:18px;color:#ff5f8a;}
+  .button{padding:12px 20px;border-radius:999px;background:linear-gradient(135deg,#ff5f8a,#7b5cff);border:none;color:#fff;font-weight:600;font-size:16px;cursor:pointer;margin:4px;flex:1;}
+  .menu{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
+  .card{background:#1a1b3f;border-radius:20px;width:95%;padding:15px;margin-bottom:15px;box-shadow:0 8px 20px rgba(0,0,0,0.5);}
+  h2{margin:0 0 10px;font-size:20px;}
+  .challenge{min-height:70px;font-size:18px;line-height:1.4;margin:10px 0;text-align:center;}
+  .footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
+  .small-button{padding:8px 14px;font-size:14px;border-radius:999px;background:#23245a;border:none;color:#fff;cursor:pointer;}
+  .pill{padding:4px 10px;border-radius:999px;background:#23245a;font-size:12px;}
+  .music-control{display:flex;align-items:center;gap:6px;}
+  input[type=range]{-webkit-appearance:none;width:80px;height:4px;background:#fff;border-radius:5px;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:#ff5f8a;border-radius:50%;cursor:pointer;}
+  .editor textarea{width:100%;height:80px;background:#141538;color:#fff;border:none;border-radius:12px;padding:8px;margin-top:8px;}
+  .editor{display:none;flex-direction:column;gap:6px;}
+  .editor.active{display:flex;}
+</style>
 </head>
 <body>
-<div class="wrap">
-  <div class="header">
-      <button class="small ghost" onclick="goFullscreen()">⛶ Pełny ekran</button>
-    <div class="brand">❤️ Gra dla Par</div>
-    <div class="row">
-      <div class="music">
-        <button class="small ghost" onclick="toggleMusic()">🎵 Muzyka</button>
-        <input type="range" min="0" max="1" step="0.01" value="0.4" oninput="setVol(this.value)">
-      </div>
-      <div class="badge">randka • auto • 18+</div>
-    </div>
+<div class="header">
+  <button class="small-button" onclick="goFullscreen()">⛶</button>
+  <div class="brand">❤️ Gra dla Par</div>
+  <div class="music-control">
+    <button class="small-button" onclick="toggleMusic()">🎵</button>
+    <input type="range" min="0" max="1" step="0.01" value="0.4" oninput="setVol(this.value)">
   </div>
+</div>
 
-  <div class="grid">
-    <div class="card">
-      <h2>Tryby gry</h2>
-      <p class="muted">Od lekkiego wstępu po bardziej intymny klimat (18+ soft).</p>
-      <div class="menu">
-        <button onclick="start('easy')">Łatwy</button>
-        <button onclick="start('intro')">Wstęp</button>
-        <button onclick="start('hot')">Hot 🔥</button>
-        <button onclick="start('soft18')">18+ 💋</button>
-        <button onclick="start('close')">Bliskość</button>
-        <button onclick="start('date')">Trip / Randka</button>
-        <button onclick="start('auto')">Auto 🚗</button>
-        <button onclick="showEditor()">Edytor ✍️</button>
-      </div>
-
-      <div class="editor panel" id="editor">
-        <h3>Własne wyzwania</h3>
-        <p class="muted">Dodaj swoje teksty – zapiszą się w przeglądarce.</p>
-        <div class="row">
-          <select id="customMode">
-            <option value="easy">Łatwy</option>
-            <option value="intro">Wstęp</option>
-            <option value="hot">Hot</option>
-            <option value="soft18">18+</option>
-            <option value="close">Bliskość</option>
-            <option value="date">Trip</option>
-            <option value="auto">Auto</option>
-          </select>
-          <button class="small" onclick="saveCustom()">Zapisz</button>
-        </div>
-        <textarea id="customText" placeholder="Wpisz własne wyzwanie..."></textarea>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2 id="title">Wyzwanie</h2>
-      <div class="row"><span class="pill" id="modeLabel">—</span></div>
-      <div class="challenge" id="challenge">Wybierz tryb po lewej.</div>
-      <div class="footer">
-        <div class="row">
-          <button class="small" onclick="next()">Losuj</button>
-          <button class="small alt" onclick="back()">Menu</button>
-        </div>
-        <span class="muted">losowo</span>
-      </div>
-    </div>
+<div class="card">
+  <h2>Tryby gry</h2>
+  <div class="menu">
+    <button class="button" onclick="start('easy')">Łatwy</button>
+    <button class="button" onclick="start('intro')">Wstęp</button>
+    <button class="button" onclick="start('hot')">Hot 🔥</button>
+    <button class="button" onclick="start('soft18')">18+ 💋</button>
+    <button class="button" onclick="start('close')">Bliskość</button>
+    <button class="button" onclick="start('date')">Trip / Randka</button>
+    <button class="button" onclick="start('auto')">Auto 🚗</button>
+    <button class="button" onclick="showEditor()">Edytor ✍️</button>
   </div>
+</div>
+
+<div class="card">
+  <h2 id="title">Wyzwanie</h2>
+  <div class="pill" id="modeLabel">—</div>
+  <div class="challenge" id="challenge">Wybierz tryb po lewej.</div>
+  <div class="footer">
+    <button class="small-button" onclick="next()">Losuj</button>
+    <button class="small-button" onclick="back()">Menu</button>
+  </div>
+</div>
+
+<div class="card editor" id="editor">
+  <h2>Własne wyzwania</h2>
+  <select id="customMode">
+    <option value="easy">Łatwy</option>
+    <option value="intro">Wstęp</option>
+    <option value="hot">Hot</option>
+    <option value="soft18">18+</option>
+    <option value="close">Bliskość</option>
+    <option value="date">Trip</option>
+    <option value="auto">Auto</option>
+  </select>
+  <button class="small-button" onclick="saveCustom()">Zapisz</button>
+  <textarea id="customText" placeholder="Wpisz własne wyzwanie..."></textarea>
 </div>
 
 <audio id="bgm" loop>
@@ -108,8 +81,6 @@
 </audio>
 
 <script>
-function goFullscreen(){const el=document.documentElement; if(el.requestFullscreen) el.requestFullscreen(); else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();}
-
 const base={
   easy:["Komplement bez powodu.","Przytulcie się 30 sekund.","Uśmiech i kontakt wzrokowy 10 sekund."],
   intro:["Delikatny masaż dłoni 1 min.","Pocałunek w policzek/czoło.","Opisz idealny wieczór."],
@@ -130,6 +101,7 @@ function saveCustom(){const m=document.getElementById('customMode').value;const 
 const bgm=document.getElementById('bgm');bgm.volume=0.4;
 function toggleMusic(){if(bgm.paused)bgm.play();else bgm.pause();}
 function setVol(v){bgm.volume=v;}
+function goFullscreen(){const el=document.documentElement;if(el.requestFullscreen) el.requestFullscreen();else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();}
 </script>
 </body>
 </html>
