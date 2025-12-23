@@ -8,26 +8,182 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0b0c1a">
 <style>
-  body{margin:0;padding:0;font-family:Inter, sans-serif;background:#0b0c1a;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:100vh;}
-  .header{width:100%;display:flex;justify-content:space-between;align-items:center;padding:10px 15px;background:#141538;box-shadow:0 2px 8px rgba(0,0,0,0.5);}
-  .brand{font-weight:700;font-size:18px;color:#ff5f8a;}
-  .button{padding:12px 20px;border-radius:999px;background:linear-gradient(135deg,#ff5f8a,#7b5cff);border:none;color:#fff;font-weight:600;font-size:16px;cursor:pointer;margin:4px;flex:1;}
-  .menu{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
-  .card{background:#1a1b3f;border-radius:20px;width:95%;padding:15px;margin-bottom:15px;box-shadow:0 8px 20px rgba(0,0,0,0.5);}
-  h2{margin:0 0 10px;font-size:20px;}
-  .challenge{min-height:70px;font-size:18px;line-height:1.4;margin:10px 0;text-align:center;}
-  .footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
-  .small-button{padding:8px 14px;font-size:14px;border-radius:999px;background:#23245a;border:none;color:#fff;cursor:pointer;}
-  .pill{padding:4px 10px;border-radius:999px;background:#23245a;font-size:12px;}
-  .music-control{display:flex;align-items:center;gap:6px;}
-  input[type=range]{-webkit-appearance:none;width:80px;height:4px;background:#fff;border-radius:5px;}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:#ff5f8a;border-radius:50%;cursor:pointer;}
-  .editor textarea{width:100%;height:80px;background:#141538;color:#fff;border:none;border-radius:12px;padding:8px;margin-top:8px;}
-  .editor{display:none;flex-direction:column;gap:6px;}
-  .editor.active{display:flex;}
+/* Reset i podstawowe ustawienia */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: Inter, sans-serif;
+  background: #0b0c1a;
+  color: #fff;
+  height: 100%;
+  width: 100%;
+}
+
+/* Body flex dla pełnej wysokości */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header */
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #141538;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 18px;
+  color: #ff5f8a;
+}
+
+.music-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+input[type=range] {
+  -webkit-appearance:none;
+  width: 80px;
+  height: 4px;
+  background:#fff;
+  border-radius:5px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance:none;
+  width:14px;
+  height:14px;
+  background:#ff5f8a;
+  border-radius:50%;
+  cursor:pointer;
+}
+
+/* Karty */
+.card {
+  background:#1a1b3f;
+  border-radius:20px;
+  width:95%;
+  max-width:500px;
+  margin:10px auto;
+  padding:15px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  gap:10px;
+}
+
+h2 {
+  margin:0 0 10px;
+  font-size:20px;
+  text-align: center;
+}
+
+/* Menu przyciski */
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap:10px;
+  justify-content: center;
+}
+
+.button {
+  flex: 1 1 calc(50% - 10px); /* dwa przyciski na szerokość */
+  padding: 14px 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg,#ff5f8a,#7b5cff);
+  border:none;
+  color:#fff;
+  font-weight:600;
+  font-size:16px;
+  cursor:pointer;
+  text-align: center;
+}
+
+/* Challenge i footer */
+.challenge {
+  min-height:80px;
+  font-size:18px;
+  line-height:1.4;
+  margin:10px 0;
+  text-align:center;
+}
+
+.footer {
+  display:flex;
+  justify-content: space-between;
+  gap:10px;
+  flex-wrap: wrap;
+}
+
+.small-button {
+  flex:1;
+  padding:12px 0;
+  font-size:16px;
+  border-radius:999px;
+  background:#23245a;
+  border:none;
+  color:#fff;
+  cursor:pointer;
+  text-align:center;
+}
+
+/* Pill */
+.pill {
+  padding:4px 10px;
+  border-radius:999px;
+  background:#23245a;
+  font-size:12px;
+  text-align:center;
+  align-self: center;
+}
+
+/* Editor */
+.editor {
+  display: none;
+  flex-direction: column;
+  gap:6px;
+}
+
+.editor.active {
+  display: flex;
+}
+
+.editor textarea {
+  width: 100%;
+  height:100px;
+  background:#141538;
+  color:#fff;
+  border:none;
+  border-radius:12px;
+  padding:8px;
+  resize: none;
+}
+
+/* Responsive */
+@media(max-width:400px) {
+  .button {
+    flex: 1 1 100%;
+  }
+  .footer {
+    flex-direction: column;
+  }
+}
 </style>
 </head>
 <body>
+
+<!-- HEADER -->
 <div class="header">
   <button class="small-button" onclick="goFullscreen()">⛶</button>
   <div class="brand">❤️ Gra dla Par</div>
@@ -37,6 +193,7 @@
   </div>
 </div>
 
+<!-- TRYBY GRY -->
 <div class="card">
   <h2>Tryby gry</h2>
   <div class="menu">
@@ -51,6 +208,7 @@
   </div>
 </div>
 
+<!-- WYZWANIE -->
 <div class="card">
   <h2 id="title">Wyzwanie</h2>
   <div class="pill" id="modeLabel">—</div>
@@ -61,6 +219,7 @@
   </div>
 </div>
 
+<!-- EDITOR -->
 <div class="card editor" id="editor">
   <h2>Własne wyzwania</h2>
   <select id="customMode">
@@ -76,11 +235,13 @@
   <textarea id="customText" placeholder="Wpisz własne wyzwanie..."></textarea>
 </div>
 
+<!-- AUDIO -->
 <audio id="bgm" loop>
   <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7a8f6a8c2e.mp3?filename=romantic-ambient-11157.mp3" type="audio/mpeg">
 </audio>
 
 <script>
+// Dane wyzwań
 const base={
   easy:["Komplement bez powodu.","Przytulcie się 30 sekund.","Uśmiech i kontakt wzrokowy 10 sekund."],
   intro:["Delikatny masaż dłoni 1 min.","Pocałunek w policzek/czoło.","Opisz idealny wieczór."],
@@ -90,18 +251,28 @@ const base={
   date:["Zaplanujcie spontaniczną randkę.","Wybierz piosenkę na spacer.","Kawa czy deser?"],
   auto:["McDonald’s Andrychów 🍔","KFC Andrychów 🍗","Kawa w Andrychowie ☕","Widok na Beskidy 🌄","Przejażdżka z muzyką 🚗🎶","Punkt widokowy okolice Kęt 🌅"]
 };
+
 let data=JSON.parse(localStorage.getItem('customData')||'null')||JSON.parse(JSON.stringify(base));
-let mode=null;const labels={easy:'Łatwy',intro:'Wstęp',hot:'Hot',soft18:'18+',close:'Bliskość',date:'Trip',auto:'Auto'};
-function start(m){hideEditor();mode=m;document.getElementById('modeLabel').innerText=labels[m];next();}
-function next(){if(!mode)return;const a=data[mode];const i=Math.floor(Math.random()*a.length);document.getElementById('challenge').innerText=a[i];document.getElementById('title').innerText=labels[mode]==='Auto'?'Gdzie jedziemy?':'Wyzwanie';}
-function back(){mode=null;document.getElementById('modeLabel').innerText='—';document.getElementById('challenge').innerText='Wybierz tryb po lewej.';document.getElementById('title').innerText='Wyzwanie';}
-function showEditor(){document.getElementById('editor').classList.add('active');}
-function hideEditor(){document.getElementById('editor').classList.remove('active');}
-function saveCustom(){const m=document.getElementById('customMode').value;const t=document.getElementById('customText').value.trim();if(!t)return;data[m].push(t);localStorage.setItem('customData',JSON.stringify(data));document.getElementById('customText').value='';alert('Zapisano!');}
-const bgm=document.getElementById('bgm');bgm.volume=0.4;
-function toggleMusic(){if(bgm.paused)bgm.play();else bgm.pause();}
-function setVol(v){bgm.volume=v;}
-function goFullscreen(){const el=document.documentElement;if(el.requestFullscreen) el.requestFullscreen();else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();}
+let mode=null;
+const labels={easy:'Łatwy',intro:'Wstęp',hot:'Hot',soft18:'18+',close:'Bliskość',date:'Trip',auto:'Auto'};
+
+// Funkcje gry
+function start(m){ hideEditor(); mode=m; document.getElementById('modeLabel').innerText=labels[m]; next(); }
+function next(){ if(!mode) return; const a=data[mode]; const i=Math.floor(Math.random()*a.length); document.getElementById('challenge').innerText=a[i]; document.getElementById('title').innerText=labels[mode]==='Auto'?'Gdzie jedziemy?':'Wyzwanie'; }
+function back(){ mode=null; document.getElementById('modeLabel').innerText='—'; document.getElementById('challenge').innerText='Wybierz tryb po lewej.'; document.getElementById('title').innerText='Wyzwanie'; }
+function showEditor(){ document.getElementById('editor').classList.add('active'); }
+function hideEditor(){ document.getElementById('editor').classList.remove('active'); }
+function saveCustom(){ const m=document.getElementById('customMode').value; const t=document.getElementById('customText').value.trim(); if(!t) return; data[m].push(t); localStorage.setItem('customData',JSON.stringify(data)); document.getElementById('customText').value=''; alert('Zapisano!'); }
+
+// Audio
+const bgm=document.getElementById('bgm');
+bgm.volume=0.4;
+function toggleMusic(){ if(bgm.paused) bgm.play(); else bgm.pause(); }
+function setVol(v){ bgm.volume=v; }
+
+// Fullscreen
+function goFullscreen(){ const el=document.documentElement; if(el.requestFullscreen) el.requestFullscreen(); else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen(); }
 </script>
+
 </body>
 </html>
